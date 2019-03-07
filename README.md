@@ -35,9 +35,8 @@ config :amqp_pool, :pool_settings,
   pool_size: 20,
   max_overflow: 40
 
-config :amqp_pool, :amqp_connection_settings,
-  username: "",
-  password: "",
-  host: "",
-  virtual_host: ""
+config :amqp_pool, amqp_username: ""
+config :amqp_pool, amqp_password: ""
+config :amqp_pool, amqp_vhost: ""
+config :amqp_pool, amqp_host: ""
 ```
