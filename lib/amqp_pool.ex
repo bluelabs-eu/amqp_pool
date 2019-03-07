@@ -15,6 +15,6 @@ defmodule AMQPPool do
   config :amqp_pool, amqp_host: ""
   ```
 
-  AMQPPool exports one function for you to use: `AMQPPool.Channel.with_channel/1`.
+  AMQPPool exports one function for you to use: `AMQPPool.Channel.with_channel/2`.
   """
 end

@@ -37,11 +37,14 @@ defmodule AMQPPool.Channel do
   In the example above, if one of the commands fails, the pattern match *outside* the `with_channel` will fail.
   ```
 
+  The second parameter is optional and is used to define a callback function that
+  can be used to bootstrap a channel by means of declaring exchanges, queues and bindings
+  when appropriate. This function is only called once in the life-time of a channel.
   """
-  def with_channel(func) do
+  def with_channel(func, setup \\ fn chan -> {:ok, chan} end) do
     :poolboy.transaction(
       :channel,
-      fn pid -> GenServer.call(pid, {:with_channel, func}, @timeout - 50) end,
+      fn pid -> GenServer.call(pid, {:with_channel, func, setup}, @timeout - 50) end,
       @timeout
     )
   end
@@ -66,12 +69,16 @@ defmodule AMQPPool.Channel do
   def ensure_channel(chan), do: {:ok, chan}
 
   @doc false
-  def handle_call({:with_channel, func}, _from, chan) do
-    with {:ok, chan} <- ensure_channel(chan) do
+  def handle_call({:with_channel, func, setup}, _from, chan) do
+    with {:ok, chan} <- ensure_channel(chan),
+         {:ok, chan} <- setup.(chan) do
       {:reply, func.(chan), chan}
     else
       {:error, reason} -> {:reply, {:error, reason}, chan}
     end
+  rescue
+    e ->
+      {:reply, {:error, e}, chan}
   end
 
   @doc false
