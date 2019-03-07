@@ -9,7 +9,7 @@ defmodule AMQPPool.Application do
     import Supervisor.Spec, warn: false
     # List all child processes to be supervised
     children = [
-      worker(AMQPPool.Connection, [amqp_connection_settings], id: AMQPPool.Connection),
+      worker(AMQPPool.Connection, [amqp_connection_settings()], id: AMQPPool.Connection),
       :poolboy.child_spec(:channel, poolboy_config(), [])
     ]
 
@@ -31,6 +31,47 @@ defmodule AMQPPool.Application do
   end
 
   defp amqp_connection_settings do
-    Application.fetch_env!(:amqp_pool, :amqp_connection_settings)
+    [
+      username: amqp_username(),
+      password: amqp_password(),
+      vhost: amqp_vhost(),
+      host: amqp_host()
+    ]
+  end
+
+  defp amqp_username() do
+    username =
+      System.get_env("AMQPPOOL_AMQP_USERNAME") ||
+        Application.fetch_env!(:amqp_pool, :amqp_username)
+
+    :ok = Application.put_env(:amqp_pool, :amqp_username, username)
+    username
+  end
+
+  defp amqp_password() do
+    password =
+      System.get_env("AMQPPOOL_AMQP_PASSWORD") ||
+        Application.fetch_env!(:amqp_pool, :amqp_password)
+
+    :ok = Application.put_env(:amqp_pool, :amqp_password, password)
+    password
+  end
+
+  defp amqp_vhost() do
+    vhost =
+      System.get_env("AMQPPOOL_AMQP_VHOST") ||
+        Application.fetch_env!(:amqp_pool, :amqp_vhost)
+
+    :ok = Application.put_env(:amqp_pool, :amqp_vhost, vhost)
+    vhost
+  end
+
+  defp amqp_host() do
+    host =
+      System.get_env("AMQPPOOL_AMQP_HOST") ||
+        Application.fetch_env!(:amqp_pool, :amqp_host)
+
+    :ok = Application.put_env(:amqp_pool, :amqp_host, host)
+    host
   end
 end

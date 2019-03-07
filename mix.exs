@@ -24,7 +24,7 @@ defmodule AMQPPool.MixProject do
   defp deps do
     [
       {:poolboy, "~> 1.5.1"},
-      {:amqp, "~> 1.0"},
+      {:amqp, "~> 1.1"},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
