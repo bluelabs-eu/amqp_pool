@@ -30,13 +30,20 @@ defmodule AMQPPoolTest do
     payload1 = "Hello, world!"
 
     {:ok, payload2, _metadata} =
-      AMQPPool.Channel.with_channel(fn channel ->
-        AMQP.Exchange.declare(channel, exchange_name, exchange_type, exchange_opts)
-        AMQP.Basic.publish(channel, exchange_name, rkey, payload1)
-        AMQP.Queue.declare(channel, queue_name, queue_opts)
-        AMQP.Queue.bind(channel, queue_name, exchange_name)
-        AMQP.Basic.get(channel, queue_name, no_ack: true)
-      end)
+      AMQPPool.Channel.with_channel(
+        # main function
+        fn channel ->
+          AMQP.Basic.publish(channel, exchange_name, rkey, payload1)
+          AMQP.Basic.get(channel, queue_name, no_ack: true)
+        end,
+        # setup
+        fn channel ->
+          :ok = AMQP.Exchange.declare(channel, exchange_name, exchange_type, exchange_opts)
+          {:ok, _} = AMQP.Queue.declare(channel, queue_name, queue_opts)
+          :ok = AMQP.Queue.bind(channel, queue_name, exchange_name)
+          {:ok, channel}
+        end
+      )
 
     assert payload2 == payload1
 
