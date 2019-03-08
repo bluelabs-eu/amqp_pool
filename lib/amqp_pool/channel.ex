@@ -2,9 +2,6 @@ defmodule AMQPPool.Channel do
   use GenServer
   @moduledoc "Manages a single AMQP channel."
 
-  # ms
-  @timeout 1000
-
   @doc false
   def start_link(_arg) do
     GenServer.start_link(__MODULE__, [], [])
@@ -41,11 +38,11 @@ defmodule AMQPPool.Channel do
   can be used to bootstrap a channel by means of declaring exchanges, queues and bindings
   when appropriate. This function is only called once in the life-time of a channel.
   """
-  def with_channel(func, setup \\ fn chan -> {:ok, chan} end) do
+  def with_channel(func, setup \\ fn chan -> {:ok, chan} end, timeout \\ 1000) do
     :poolboy.transaction(
       :channel,
-      fn pid -> GenServer.call(pid, {:with_channel, func, setup}, @timeout - 50) end,
-      @timeout
+      fn pid -> GenServer.call(pid, {:with_channel, func, setup}, timeout - 50) end,
+      timeout
     )
   end
 
