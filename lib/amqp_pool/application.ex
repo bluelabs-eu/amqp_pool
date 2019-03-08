@@ -34,7 +34,7 @@ defmodule AMQPPool.Application do
     [
       username: amqp_username(),
       password: amqp_password(),
-      vhost: amqp_vhost(),
+      virtual_host: amqp_vhost(),
       host: amqp_host()
     ]
   end
