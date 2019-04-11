@@ -28,13 +28,3 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 #     import_config "#{Mix.env}.exs"
-
-# example config:
-config :amqp_pool, :pool_settings,
-  pool_size: 5,
-  max_overflow: 2
-
-config :amqp_pool, amqp_username: "USERNAME"
-config :amqp_pool, amqp_password: "PASSWORD"
-config :amqp_pool, amqp_vhost: "VHOST"
-config :amqp_pool, amqp_host: "HOST"

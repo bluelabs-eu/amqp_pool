@@ -4,15 +4,18 @@ defmodule AMQPPool do
 
   You need to configure AMQPPool to tell it how to connect and set some pool settings.
   ```elixir
-  # these are the same settings as for poolboy
-  config :amqp_pool, :pool_settings,
-    pool_size: 20,
-    max_overflow: 40
+  config :amqp_pool, pools: [:my_pool]
 
-  config :amqp_pool, amqp_username: ""
-  config :amqp_pool, amqp_password: ""
-  config :amqp_pool, amqp_vhost: ""
-  config :amqp_pool, amqp_host: ""
+  # these are the same settings as for poolboy
+  config :amqp_pool, :my_pool,
+    pool_size: 5,
+    max_overflow: 2
+
+  config :amqp_pool, my_pool_username: "USERNAME"
+  config :amqp_pool, my_pool_password: "PASSWORD"
+  config :amqp_pool, my_pool_vhost: "VHOST"
+  config :amqp_pool, my_pool_host: "HOST"
+  config :amqp_pool, my_pool_host: 5672
   ```
 
   AMQPPool exports one function for you to use: `AMQPPool.Channel.with_channel/2`.

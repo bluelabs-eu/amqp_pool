@@ -3,18 +3,18 @@ defmodule AMQPPool.Connection do
   use GenServer
 
   @doc false
-  def start_link(connection_options, name \\ :undefined) do
-    GenServer.start_link(__MODULE__, [connection_options, name], name: __MODULE__)
+  def start_link(connection_options, opts, name \\ :undefined) do
+    GenServer.start_link(__MODULE__, [connection_options, name], opts)
   end
 
   @doc false
-  def connection do
-    GenServer.call(__MODULE__, :connection)
+  def connection(pid) do
+    GenServer.call(pid, :connection)
   end
 
   @doc false
-  def new_channel do
-    GenServer.call(__MODULE__, :new_channel)
+  def new_channel(pid) do
+    GenServer.call(pid, :new_channel)
   end
 
   # GenServer callbacks
