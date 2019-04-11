@@ -76,7 +76,7 @@ defmodule AMQPPool.Pool do
   defp fetch_param!(param_name, pool, transformation \\ & &1) do
     env_var = env_var(pool, param_name)
     param = param(pool, param_name)
-    fetch_value!(env_var, param)
+    fetch_value!(env_var, param, transformation)
   end
 
   def param(pool, param), do: [pool, param] |> Enum.join("_") |> String.to_atom()
