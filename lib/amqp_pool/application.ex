@@ -9,7 +9,9 @@ defmodule AMQPPool.Application do
     import Supervisor.Spec, warn: false
     # List all child processes to be supervised
     children = [
-      worker(AMQPPool.Connection, [amqp_connection_settings()], id: AMQPPool.Connection),
+      worker(AMQPPool.Connection, [amqp_connection_settings(), amqp_connection_name()],
+        id: AMQPPool.Connection
+      ),
       :poolboy.child_spec(:channel, poolboy_config(), [])
     ]
 
@@ -28,6 +30,10 @@ defmodule AMQPPool.Application do
       {:size, settings[:pool_size]},
       {:max_overflow, settings[:max_overflow]}
     ]
+  end
+
+  defp amqp_connection_name do
+    Application.get_env(:amqp_pool, :amqp_connection_name, :undefined)
   end
 
   defp amqp_connection_settings do
