@@ -24,9 +24,7 @@ defmodule AMQPPool.MixProject do
   defp deps do
     [
       {:poolboy, "~> 1.5.1"},
-      {:amqp,
-       git: "https://github.com/bluelabs-eu/amqp.git",
-       ref: "1d0778795849c415be98c8565a99c52c6ff84266"},
+      {:amqp, "~> 1.2"},
       {:ex_doc, ">= 0.0.0", only: :dev}
     ]
   end
